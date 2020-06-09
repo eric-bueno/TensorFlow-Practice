@@ -20,25 +20,29 @@ test_images = train_images / 255.0
 # output layer has 10 nodes representing each class name
 #   softmax ensures outputs sum up to 1 so we can assign probabilities
 model = keras.Sequential([keras.layers.Flatten(input_shape=(28,28)),
-                          keras.layers.Dense(128, activation='relu'),
-                          keras.layers.Dense(10, activation='softmax')])
+                          keras.layers.Dense(128, activation="relu"),
+                          keras.layers.Dense(10, activation="softmax")])
 
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
 
 # train the data
 # epochs decide how many times the model will see the data
 #   randomly pick images and labels to feed to neural network
 #   random because order of the input will affect the tweaks made by the model
 model.fit(train_images, train_labels, epochs=5)
+test_loss, test_acc = model.evaluate(test_images, test_labels)
+# print("Tested acc: ", test_acc)
 
 # use the model
 prediction = model.predict(test_images)
 
+# show the predicted class name based on the most likely prediction
+# print(class_names[np.argmax(predictions[0])])
+
+# show 5 predictions and actual labels
 for i in range(5):
     plt.grid(False)
     plt.imshow(test_images[i], cmap=plt.cm.binary)
-    plt.xlabel('Actual: ' + class_names[test_labels[i]])
+    plt.xlabel("Actual: " + class_names[test_labels[i]])
     plt.title("Prediction " + class_names[np.argmax(prediction[i])])
     plt.show()
-
-# print(class_names[np.argmax(prediction[0])]) #finds largest value (what the model predicted)
